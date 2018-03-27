@@ -21,20 +21,32 @@ const dest = document.getElementById('content');
 const store = createStore(_browserHistory, client, window.__data);
 const history = syncHistoryWithStore(_browserHistory, store);
 
+function reconnect() {
+  setTimeout(function() {
+      console.log('retrying...')
+      global.socket = initSocket();
+    }, 3000)
+}
+
 function initSocket() {
-  let socket = io('', {path: '/ws'});
-  socket.on('snapshot', (data) => {
-    console.log(data);
-    socket.emit('my other event', { my: 'data from client' });
-  });
-  socket.on('update', (data) => {
-    console.log(data);
-  });
+  let socket = io('', {path: '/ws', reconnection: false});
+  
+  socket.on('connect', () => {
+    console.log('socket connected');
+  })
   socket.on('disconnect',() => {
+    
     socket = undefined;
+
+    reconnect();
   });
+
+  socket.on('connect_error', () => {
+    reconnect();
+  })
   return socket;
 }
+
 global.socket = initSocket();
 
 const component = (

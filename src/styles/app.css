@@ -1,0 +1,15 @@
+.fixedDataTableCellLayout_wrap1 {
+	width: 100%;
+	transition-duration: 0.2s;
+}
+
+.change-green {
+	background-color: #47af22;
+	color: white;
+}
+
+.change-red {
+	background-color: #ff3300;
+	color: white;
+}
+
